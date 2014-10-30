@@ -5,6 +5,7 @@ this sketch is a skeleton of a generic sensor sketch, at the moment it is deisgn
       =====
 * genralise sketch
 * import time object
+*change magik number - arraySIZE
 *instead of dataPoint array, could it be a String array and we can just separate the value from timestamp with a / or something?
 */
 //create new instance of sensor with pin number and resolution
@@ -16,7 +17,8 @@ this sketch is a skeleton of a generic sensor sketch, at the moment it is deisgn
 #define LED 13            //define variable led to pin 13
 #define RESOLUTION 10000   //define resolution of anemometer sensor
 #define HALL_EFFECT 8     //define sensor pin
-#define HALL_ON 100
+#define HALL_ON 100       //used to debounce the sensor if the magnet is ontop of sensor and is static
+#define DP_SIZE 3      //size of dataPointArray
 //Sensor sensor(13,1000);
 
 //STEP 1 - INITIALISATION
@@ -58,7 +60,7 @@ class Sensor {
   byte getPin(void) {return pin;} 
   int getResolution(void) {return resolution;} 
   void addDataPoint(byte);            
-  dataPoint dataPointArray[3];              //dataPoint array should contain all datapoints created in 
+  dataPoint dataPointArray[DP_SIZE];              //dataPoint array should contain all datapoints created in 
   void printOutput();
   byte printValue(int);
   time_t printTimeStamp(int);
@@ -127,7 +129,7 @@ time_t Sensor::printTimeStamp(int i){
   return dataPointArray[i].timeStamp;
 }
 void Sensor::printOutput(){
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < DP_SIZE; i++) {
     Serial.print("VALUE = ");
   Serial.println(printValue(i));
   Serial.print("TIME STAMP = ");
@@ -138,7 +140,7 @@ void Sensor::printOutput(){
 }
 
 void Sensor::begin(){
-  while(arrayPosition < 3){
+  while(arrayPosition < DP_SIZE){
   int data = getData();
   addDataPoint(data);
   }
