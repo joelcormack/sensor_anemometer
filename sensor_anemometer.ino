@@ -59,9 +59,10 @@ class Sensor {
   int getResolution(void) {return resolution;} 
   void addDataPoint(byte);            
   dataPoint dataPointArray[3];              //dataPoint array should contain all datapoints created in 
-  String printOutput();
+  void printOutput();
   byte printValue(int);
   time_t printTimeStamp(int);
+  void begin();
   
 };//END SENSOR CLASS
 
@@ -125,7 +126,7 @@ byte Sensor::printValue(int i){
 time_t Sensor::printTimeStamp(int i){
   return dataPointArray[i].timeStamp;
 }
-String Sensor::printOutput(){
+void Sensor::printOutput(){
   for (int i = 0; i < 3; i++) {
     Serial.print("VALUE = ");
   Serial.println(printValue(i));
@@ -135,19 +136,20 @@ String Sensor::printOutput(){
   }
  
 }
+
+void Sensor::begin(){
+  while(arrayPosition < 3){
+  int data = getData();
+  addDataPoint(data);
+  }
+  printOutput();
+  arrayPosition = 0;
+}
 void print2() {
   Sensor anemometer (HALL_EFFECT,RESOLUTION);
-  int data = anemometer.getData();
-  anemometer.addDataPoint(data);
   
-  Serial.print("in the array = ");
-  anemometer.printOutput();
-  Serial.print(" rotations per ");
-  Serial.print(RESOLUTION);
-  Serial.print(" milliseconds");
-  Serial.println("");
-  Serial.println("");
-  Serial.print("In the dataPoint Array");
+  anemometer.begin();
+  
 }
  
 //STEP 4 - OUTPUT
