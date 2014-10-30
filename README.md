@@ -1,0 +1,1 @@
+**This sketch os the skeleton of a sensor class**
