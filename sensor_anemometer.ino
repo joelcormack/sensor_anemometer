@@ -119,7 +119,11 @@ void Sensor::addDataPoint(byte v) {
 }
 void reportData(){
 }
-void clearData(){
+void Sensor::clearData(){
+  for (int i = 0; i < DP_SIZE; i++) {
+  dataPointArray[i].value = 0;
+  dataPointArray[i].timeStamp = 0;
+  }
 }
 
 byte Sensor::printValue(int i){
@@ -136,7 +140,6 @@ void Sensor::printOutput(){
   Serial.println(printTimeStamp(i));
   Serial.println("");
   }
- 
 }
 
 void Sensor::begin(){
@@ -146,12 +149,12 @@ void Sensor::begin(){
   }
   printOutput();
   arrayPosition = 0;
+  clearData();
+  printOutput();
 }
 void print2() {
   Sensor anemometer (HALL_EFFECT,RESOLUTION);
-  
   anemometer.begin();
-  
 }
  
 //STEP 4 - OUTPUT
