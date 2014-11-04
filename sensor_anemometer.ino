@@ -10,13 +10,13 @@ this sketch is a skeleton of a generic sensor sketch, at the moment it is deisgn
 */
 //create new instance of sensor with pin number and SENSOR_RESOLUTION
 
-#include <Time.h>  
-#include <Wire.h>  
+#include <Time.h>        //time library
+#include <Wire.h>        //Data trasnfer library
 #include <DS1307RTC.h>  // a basic DS1307 library that returns time as a time_t
 
 //for datalogger
-#include <SPI.h>
-#include <SD.h>
+#include <SPI.h>       //SPI data transfer protocol library
+#include <SD.h>        //SD card library
 
 #define LED 7            //define variable led to pin
 #define SENSOR_RESOLUTION 10000   //define SENSOR_RESOLUTION of anemometer sensor
@@ -24,13 +24,15 @@ this sketch is a skeleton of a generic sensor sketch, at the moment it is deisgn
 #define HALL_ON 100       //used to debounce the sensor if the magnet is ontop of sensor and is static    
 #define SS 10          //SD card output must be set to output
 
-//Sensor sensor(13,1000);
-#define LOG_RESOLUTION 30000   //log data resolution
-#define DP_SIZE LOG_RESOLUTION/SENSOR_RESOLUTION     //size of dataPointArray
-#define redLED 6  //red error led
-const int chipSelect = 10;
-File dataFile;
+#define LOG_RESOLUTION 30000                             //log data resolution
+#define DP_SIZE LOG_RESOLUTION/SENSOR_RESOLUTION         //size of dataPointArray
+#define redLED 6                                         //error led pin number def
 
+#define chipSelect = 10;                                //datalogger output 
+
+File dataFile;                                          //create instance of File for datalogger
+
+//error handling function
 void error(char *str)
 {
   Serial.print("error: ");
@@ -39,19 +41,21 @@ void error(char *str)
   // red LED indicates error
   digitalWrite(redLED, HIGH);
 
-  while(1);
+  while(1);    //infinite loop to stop program
 }
 
 //STEP 1 - INITIALISATION
 void setup(){
-  Serial.begin(9600);        //begin serial
-  setSyncProvider(RTC.get);   // the function to sync the time from the RTC  
-  pinMode(LED, OUTPUT);      //set pin mode to output
-  pinMode(HALL_EFFECT,INPUT);      //set input pin
+  Serial.begin(9600);                                //begin serial
+  setSyncProvider(RTC.get);                          //sync time from the Real Time Clock  
+  pinMode(LED, OUTPUT);                              //set pin mode to output
+  pinMode(HALL_EFFECT,INPUT);                        //set input pin
+  
   #if WAIT_TO_START
-  Serial.println("Type any character to start");
-  while (!Serial.available());
-#endif //WAIT_TO_START
+   Serial.println("Type any character to start");
+   while (!Serial.available());
+  #endif //WAIT_TO_START
+  
   Serial.print("Initializing SD card...");
   pinMode(10, OUTPUT);
     // see if the card is present and can be initialized:
